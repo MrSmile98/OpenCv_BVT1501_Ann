@@ -31,7 +31,7 @@
 import numpy as np
 import cv2
 
-cap = cv2.VideoCapture ('trace-traffic2.avi')
+cap = cv2.VideoCapture ('trace-traffic3.mp4')
 
 # params for ShiTomasi corner detection
 feature_params = dict( maxCorners = 100,
@@ -41,11 +41,11 @@ feature_params = dict( maxCorners = 100,
 
 # Parameters for lucas kanade optical flow
 lk_params = dict( winSize  = (15,15),
-                  maxLevel = 2,
+                    maxLevel = 2,
                   criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
 # Create some random colors
-color = np.random.randint(0,255,(100,3))
+color = np.random.randint(0,255,(1000,3))
 
 # Take first frame and find corners in it
 ret, old_frame = cap.read()
@@ -55,7 +55,7 @@ p0 = cv2.goodFeaturesToTrack(old_gray, mask = None, **feature_params)
 # Create a mask image for drawing purposes
 mask = np.zeros_like(old_frame)
 
-while(1):
+while(cap.isOpened()):
     ret,frame = cap.read()
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -75,9 +75,10 @@ while(1):
     img = cv2.add(frame,mask)
 
     cv2.imshow('frame',img)
-    k = cv2.waitKey(100) & 0xff
+    k = cv2.waitKey(25) & 0xff
     if k == 27:
         break
+
 
     # Now update the previous frame and previous points
     old_gray = frame_gray.copy()
